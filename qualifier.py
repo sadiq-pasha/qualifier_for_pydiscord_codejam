@@ -32,3 +32,17 @@ class Article:
         self.author = author
         self.publication_date = publication_date
         self.content = content
+
+    def __repr__(self):
+        return(f"<Article title={repr(self.title)} author={repr(self.author)} publication_date={repr(self.publication_date.isoformat())}>")
+    
+    def __len__(self):
+        if isinstance(self.content, str): return len(self.content)
+    
+    def short_introduction(self,n_characters):
+        if n_characters >= len(self.content):
+            return(string)
+        while self.content[n_characters] not in [' ', '\n']:
+            n_characters-=1
+        return(self.content[:n_characters])
+      
