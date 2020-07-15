@@ -27,6 +27,7 @@ class ArticleField:
 
 class Article:
     """The `Article` class you need to write for the qualifier."""
+    identity = 0
 
     def __init__(self, title: str, author: str,
                  publication_date: datetime.datetime, content: str):
@@ -34,6 +35,28 @@ class Article:
         self.author = author
         self.publication_date = publication_date
         self.content = content
+        self.id = self.identity
+        self.update()
+
+    @property
+    def content(self):
+        # getter for attribute "content"
+        return self._content
+
+    @content.setter
+    def content(self, value):
+        # setter for attribute "content", creates
+        # creates and updates an attribute "last_edited"
+        if 'last_edited' not in self.__dict__:
+            self.last_edited = None
+        else:
+            self.last_edited = datetime.datetime.now()
+        self._content = value
+
+    @classmethod
+    def update(cls):
+        '''increment class variable 'identity' for every new instance'''
+        cls.identity += 1
 
     def __repr__(self):
         return(f"<Article title={repr(self.title)} author={repr(self.author)} publication_date={repr(self.publication_date.isoformat())}>")
