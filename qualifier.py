@@ -16,6 +16,7 @@ Important notes for submission:
 import datetime
 import typing
 from collections import Counter, OrderedDict
+from functools import total_ordering
 
 
 class ArticleField:
@@ -25,6 +26,7 @@ class ArticleField:
         pass
 
 
+@total_ordering
 class Article:
     """The `Article` class you need to write for the qualifier."""
     identity = 0
@@ -57,6 +59,13 @@ class Article:
     def update(cls):
         '''increment class variable 'identity' for every new instance'''
         cls.identity += 1
+    
+    '''comparison checks for total_ordering'''
+    def __lt__(self, other):
+        return self.publication_date < other.publication_date
+
+    def __eq__(self,other):
+        return self.publication_date == other.publication_date
 
     def __repr__(self):
         return(f"<Article title={repr(self.title)} author={repr(self.author)} publication_date={repr(self.publication_date.isoformat())}>")
