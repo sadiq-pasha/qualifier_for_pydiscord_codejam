@@ -22,14 +22,28 @@ from functools import total_ordering
 class ArticleField:
     """The `ArticleField` class for the Advanced Requirements."""
 
-    def __init__(self, field_type: typing.Type[typing.Any]):
-        pass
+    def __init__(self, field_type):
+        self.field_type = field_type
+
+    def __get__(self, obj, objtype):
+        #print('Retrieving', self.name)
+        return self.val
+
+    def __set__(self, obj, val):
+        #print('Updating', self.name)
+        if isinstance(val, self.field_type):
+            self.val = val
+        else:
+            raise TypeError(f"expected\ an\ instance\ of\ type\ '{self.field_type.__name__}'\ for\ attribute\ 'change_this',\ got\ '{type(val).__name__}'\ instead")
 
 
 @total_ordering
 class Article:
     """The `Article` class you need to write for the qualifier."""
     identity = 0
+    title = ArticleField(str)
+    author = ArticleField(str)
+    publication_date = ArticleField(datetime.datetime)
 
     def __init__(self, title: str, author: str,
                  publication_date: datetime.datetime, content: str):
@@ -47,7 +61,7 @@ class Article:
 
     @content.setter
     def content(self, value):
-        # setter for attribute "content", creates
+        # setter for attribute "content", creates 
         # creates and updates an attribute "last_edited"
         if 'last_edited' not in self.__dict__:
             self.last_edited = None
