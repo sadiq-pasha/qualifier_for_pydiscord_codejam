@@ -1,18 +1,3 @@
-"""
-Use this file to write your solution for the Summer Code Jam 2020 Qualifier.
-
-Important notes for submission:
-
-- Do not change the names of the two classes included below. The test suite we
-  will use to test your submission relies on existence these two classes.
-
-- You can leave the `ArticleField` class as-is if you do not wish to tackle the
-  advanced requirements.
-
-- Do not include "debug"-code in your submission. This means that you should
-  remove all debug prints and other debug statements before you submit your
-  solution.
-"""
 import datetime
 import typing
 from collections import Counter, OrderedDict
@@ -21,20 +6,24 @@ from functools import total_ordering
 
 class ArticleField:
     """The `ArticleField` class for the Advanced Requirements."""
+    # data descriptor implementing all 4 descriptor protocols
+    # attributes that are implemented using this descriptor
+    # have their values stored in the instance __dict__
 
     def __init__(self, field_type):
         self.field_type = field_type
+    
+    def __set_name__(self, owner, name):
+        self.name = name
 
-    def __get__(self, obj, objtype):
-        #print('Retrieving', self.name)
-        return self.val
+    def __get__(self, instance, owner):
+        return instance.__dict__.get(self.name)
 
-    def __set__(self, obj, val):
-        #print('Updating', self.name)
-        if isinstance(val, self.field_type):
-            self.val = val
+    def __set__(self, instance, value):
+        if isinstance(value, self.field_type):
+            instance.__dict__[self.name] = value
         else:
-            raise TypeError(f"expected\ an\ instance\ of\ type\ '{self.field_type.__name__}'\ for\ attribute\ 'change_this',\ got\ '{type(val).__name__}'\ instead")
+            raise TypeError(f"expected an instance of type '{self.field_type.__name__}' for attribute '{self.name}', got '{type(value).__name__}' instead")
 
 
 @total_ordering
@@ -103,12 +92,12 @@ class Article:
         '''return 'n' most common words in content as a dictionary, with frequency.
            1) case insensitive, return dictionary is lowercase
            2) all non alphabetical characters are used to split words
-                (they're yield 2 words, 'they' and 're')
+                (example: "they're" yields 2 words, 'they' and 're')
            3) if multiple words have same frequency:
                 return dictionary has words in the order they appear'''
         lower_string = self.content.lower()
         temp_string = ''
-        # Repalce all non alphabetical characters with a whitespace
+        # replace all non alphabetical characters with a whitespace
         for index in range(len(lower_string)):
             if lower_string[index].isalpha():
                 temp_string += lower_string[index]
