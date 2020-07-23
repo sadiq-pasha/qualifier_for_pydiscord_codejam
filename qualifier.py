@@ -1,3 +1,5 @@
+'''@r00t's qualifier solution'''
+
 import datetime
 import typing
 from collections import Counter, OrderedDict
@@ -17,7 +19,10 @@ class ArticleField:
         self.name = name
 
     def __get__(self, instance, owner):
-        return instance.__dict__.get(self.name)
+        if self.name not in instance.__dict__:
+            raise AttributeError
+        else:
+            return instance.__dict__.get(self.name)
 
     def __set__(self, instance, value):
         if isinstance(value, self.field_type):
